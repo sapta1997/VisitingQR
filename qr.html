@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>QR Code</title>
+<meta name="description" content="Generate the QR code that opens the visiting card." />
+<meta name="theme-color" content="#e8e4df" />
+<meta name="robots" content="noindex" />
+
+<!-- Self-hosted so this page works offline and has no external requests.
+     qrcode-generator by Kazuhiko Arase, MIT licence. -->
+<script src="assets/qrcode-generator.min.js"></script>
+
+<style>
+  :root {
+    --bg:     #efece7;
+    --panel:  #fbf9f6;
+    --line:   #ddd6cc;
+    --ink:    #2b2420;
+    --muted:  #7a6f64;
+    --accent: #6b4f3a;
+  }
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 32px 20px 60px;
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 880px; margin: 0 auto; }
+
+  h1 { margin: 0 0 4px; font-size: 1.4rem; font-weight: 650; letter-spacing: -0.01em; }
+  .sub { margin: 0 0 28px; color: var(--muted); font-size: 0.92rem; }
+
+  .grid { display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: start; }
+  @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+  }
+
+  label { display: block; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em;
+          text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+  .field + .field { margin-top: 18px; }
+
+  input[type=text], select {
+    width: 100%;
+    padding: 10px 12px;
+    font: inherit;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+  }
+  input[type=text]:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  input[type=color] { width: 46px; height: 34px; padding: 2px; border: 1px solid var(--line);
+                      border-radius: 8px; background: #fff; cursor: pointer; }
+
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .row > .grow { flex: 1 1 120px; }
+
+  .hint { margin: 6px 0 0; font-size: 0.8rem; color: var(--muted); }
+
+  /* ---- preview ---- */
+  .preview { text-align: center; }
+  #qr { width: 100%; max-width: 260px; height: auto; display: block; margin: 0 auto 14px;
+        border-radius: 8px; }
+
+  .stats { font-size: 0.8rem; color: var(--muted); text-align: left;
+           border-top: 1px solid var(--line); padding-top: 12px; margin-top: 4px; }
+  .stats b { color: var(--ink); font-weight: 600; }
+  .stats div { display: flex; justify-content: space-between; gap: 12px; padding: 2px 0; }
+
+  .btns { display: flex; gap: 8px; margin-top: 14px; }
+  button {
+    flex: 1 1 auto;
+    padding: 10px 12px;
+    font: inherit;
+    font-weight: 600;
+    color: #fff;
+    background: var(--accent);
+    border: 0;
+    border-radius: 9px;
+    cursor: pointer;
+  }
+  button.ghost { color: var(--ink); background: #fff; border: 1px solid var(--line); }
+  button:hover { filter: brightness(1.08); }
+  button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  .warn {
+    margin: 14px 0 0; padding: 10px 12px; border-radius: 9px;
+    background: #fdf3e6; border: 1px solid #e8cfa8; color: #6b4a17; font-size: 0.84rem;
+  }
+  .warn[hidden] { display: none; }
+
+  .notes { margin: 26px 0 0; font-size: 0.86rem; color: var(--muted); }
+  .notes h2 { font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+              color: var(--muted); margin: 0 0 8px; }
+  .notes li { margin: 0 0 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>QR code</h1>
+  <p class="sub">Generates the code that opens the visiting card. Print the SVG - it stays sharp at any size.</p>
+
+  <div class="grid">
+
+    <div class="panel">
+      <div class="field">
+        <label for="url">Address the code opens</label>
+        <input type="text" id="url" value="https://sapta1997.github.io/VisitingQR/"
+               spellcheck="false" autocomplete="off" />
+        <p class="hint">Shorter addresses make a simpler, easier-to-scan code.</p>
+      </div>
+
+      <div class="field">
+        <label for="ecc">Error correction</label>
+        <select id="ecc">
+          <option value="L">L - 7% recoverable, simplest code</option>
+          <option value="M" selected>M - 15% recoverable (recommended)</option>
+          <option value="Q">Q - 25% recoverable</option>
+          <option value="H">H - 30% recoverable, use if a logo covers the centre</option>
+        </select>
+        <p class="hint">Higher correction survives scuffs and ink smudging, but adds modules.</p>
+      </div>
+
+      <div class="field">
+        <label>Colours</label>
+        <div class="row">
+          <input type="color" id="fg" value="#2b2420" aria-label="Code colour" />
+          <span class="grow hint" style="margin:0">code</span>
+          <input type="color" id="bg" value="#ffffff" aria-label="Background colour" />
+          <span class="grow hint" style="margin:0">background</span>
+        </div>
+        <div class="warn" id="contrastWarn" hidden></div>
+      </div>
+
+      <div class="field">
+        <label for="px">PNG size</label>
+        <select id="px">
+          <option value="512">512 px - screen</option>
+          <option value="1024" selected>1024 px - screen / small print</option>
+          <option value="2048">2048 px - print</option>
+          <option value="4096">4096 px - large print</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="panel preview">
+      <svg id="qr" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="QR code preview"></svg>
+
+      <div class="stats">
+        <div><span>Version</span><b id="sVer">-</b></div>
+        <div><span>Grid</span><b id="sMod">-</b></div>
+        <div><span>Min print width</span><b id="sMm">-</b></div>
+      </div>
+
+      <div class="btns">
+        <button id="dlSvg">SVG</button>
+        <button id="dlPng" class="ghost">PNG</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="notes">
+    <h2>Printing it</h2>
+    <ul>
+      <li><b>Keep the pale margin.</b> It is part of the code - scanners need that clear border, and it is already built into both downloads.</li>
+      <li><b>Do not go below the minimum width</b> shown above, and give it a little more if it will be scanned in poor light.</li>
+      <li><b>Dark code on a light background.</b> Inverted codes fail on many phones.</li>
+      <li><b>Use the SVG for anything printed.</b> The PNG is fixed-resolution and will soften when enlarged.</li>
+      <li><b>Scan the final print</b> with more than one phone before ordering a batch.</li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var QUIET = 4;                       // quiet zone, in modules - required by the spec
+  var el = function (id) { return document.getElementById(id); };
+  var urlEl = el("url"), eccEl = el("ecc"), fgEl = el("fg"), bgEl = el("bg"), pxEl = el("px");
+  var svgEl = el("qr");
+  var current = null;
+
+  function luminance(hex) {
+    var n = parseInt(hex.slice(1), 16);
+    var c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(function (v) {
+      v /= 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  }
+
+  function contrast(a, b) {
+    var la = luminance(a), lb = luminance(b);
+    return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+  }
+
+  function build() {
+    var text = urlEl.value.trim();
+    var warn = el("contrastWarn");
+
+    if (!text) { svgEl.innerHTML = ""; current = null; return; }
+
+    var qr;
+    try {
+      qr = qrcode(0, eccEl.value);     // 0 = pick the smallest version that fits
+      qr.addData(text);
+      qr.make();
+    } catch (e) {
+      svgEl.innerHTML = "";
+      current = null;
+      warn.hidden = false;
+      warn.textContent = "That address is too long to encode. Shorten it and try again.";
+      return;
+    }
+
+    var count = qr.getModuleCount();
+    var total = count + QUIET * 2;
+    var fg = fgEl.value, bg = bgEl.value;
+
+    // one path holding every dark module, so the SVG stays small
+    var d = "";
+    for (var r = 0; r < count; r++) {
+      for (var c = 0; c < count; c++) {
+        if (qr.isDark(r, c)) d += "M" + (c + QUIET) + " " + (r + QUIET) + "h1v1h-1z";
+      }
+    }
+
+    svgEl.setAttribute("viewBox", "0 0 " + total + " " + total);
+    svgEl.innerHTML =
+      '<rect width="' + total + '" height="' + total + '" fill="' + bg + '"/>' +
+      '<path d="' + d + '" fill="' + fg + '" shape-rendering="crispEdges"/>';
+
+    current = { qr: qr, count: count, total: total, fg: fg, bg: bg, text: text };
+
+    // a module needs roughly 0.5 mm to stay readable to a phone at arm's length
+    var mm = Math.ceil(total * 0.5);
+    el("sVer").textContent = ((count - 17) / 4) + "";
+    el("sMod").textContent = count + " x " + count;
+    el("sMm").textContent = mm + " mm  (" + (mm / 25.4).toFixed(1) + " in)";
+
+    var ratio = contrast(fg, bg);
+    if (ratio < 4) {
+      warn.hidden = false;
+      warn.textContent = "Contrast is only " + ratio.toFixed(1) +
+        ":1 - too low to scan reliably. Aim for a dark code on a light background.";
+    } else if (luminance(fg) > luminance(bg)) {
+      warn.hidden = false;
+      warn.textContent = "This code is lighter than its background. Many phones will not read an inverted code.";
+    } else {
+      warn.hidden = true;
+    }
+  }
+
+  function save(blob, name) {
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  }
+
+  function fileName(ext) {
+    var slug = "qr-code";
+    try {
+      var u = new URL(current.text);
+      slug = "qr-" + (u.hostname + u.pathname).replace(/[^a-z0-9]+/gi, "-")
+                     .replace(/^-|-$/g, "").toLowerCase();
+    } catch (e) { /* not a URL - keep the default */ }
+    return slug.slice(0, 60) + "." + ext;
+  }
+
+  el("dlSvg").addEventListener("click", function () {
+    if (!current) return;
+    var svg = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + current.total + ' ' +
+      current.total + '" width="' + current.total * 8 + '" height="' + current.total * 8 + '">' +
+      svgEl.innerHTML + '</svg>';
+    save(new Blob([svg], { type: "image/svg+xml" }), fileName("svg"));
+  });
+
+  el("dlPng").addEventListener("click", function () {
+    if (!current) return;
+    var want = parseInt(pxEl.value, 10);
+    // whole-pixel modules only, so edges stay perfectly crisp
+    var scale = Math.max(1, Math.round(want / current.total));
+    var size = current.total * scale;
+
+    var cv = document.createElement("canvas");
+    cv.width = cv.height = size;
+    var ctx = cv.getContext("2d");
+    ctx.fillStyle = current.bg;
+    ctx.fillRect(0, 0, size, size);
+    ctx.fillStyle = current.fg;
+    for (var r = 0; r < current.count; r++) {
+      for (var c = 0; c < current.count; c++) {
+        if (current.qr.isDark(r, c)) {
+          ctx.fillRect((c + QUIET) * scale, (r + QUIET) * scale, scale, scale);
+        }
+      }
+    }
+    cv.toBlob(function (b) { save(b, fileName("png")); }, "image/png");
+  });
+
+  [urlEl, eccEl, fgEl, bgEl].forEach(function (n) {
+    n.addEventListener("input", build);
+    n.addEventListener("change", build);
+  });
+
+  build();
+})();
+</script>
+</body>
+</html>

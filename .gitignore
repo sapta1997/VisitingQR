@@ -36,3 +36,12 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Scratch / work-in-progress kept out of the repo
+trash/
+
+# Design-canvas editor artifacts. The design itself (*.dc.html) and the
+# full-resolution exports in design-new/assets are kept - these are not.
+design-new/support.js
+design-new/.thumbnail
+design-new/uploads/
