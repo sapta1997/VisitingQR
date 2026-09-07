@@ -1,83 +1,78 @@
 # VisitingQR
 
-A single-page **digital visiting card** — one link that holds every contact
-method, meant to be reached by scanning a QR code.
+A single-page **digital visiting card** for Saptadeep Sharma — one link holding
+every contact method, meant to be reached by scanning a QR code.
 
-No build step, no dependencies, no tracking. One HTML file.
+No build step, no framework. Two HTML files and a handful of assets.
 
-## Live URL
+## Live
 
-Once GitHub Pages is enabled (see below), the card is served at:
+**https://sapta1997.github.io/VisitingQR/**
 
-```
-https://sapta1997.github.io/VisitingQR/
-```
+Served by GitHub Pages from `main` / `/ (root)`. Every push to `main`
+republishes within a minute or so.
 
-That clean root URL is what the QR code should encode — shorter URLs make a
-simpler, easier-to-scan QR. This is why the page is named `index.html`.
+The page lives at `index.html` so the QR encodes the shortest possible URL —
+shorter URLs make a lower-density, easier-to-scan code.
 
-## Customising the card
+## The card
 
-Everything editable in [`index.html`](index.html) is marked with an `EDIT:`
-comment. In order:
+`index.html` is a fixed, non-scrolling single screen: a torn-paper photograph
+fills the viewport, and all the type sits on top as real HTML text.
 
-| What | Where |
+- **The typography is text, not pixels.** Nothing is baked into the artwork, so
+  it stays sharp at any density, can be selected and translated, and is read
+  properly by screen readers.
+- **`background.webp` is 1425x2532** — the size a 390px-wide phone needs at 3x
+  pixel density under `object-fit: cover`. WebP is served first, with a JPEG
+  fallback via `<picture>`. The WebP is 121 KB, smaller than the 576x1024 JPEG
+  it replaced.
+- **Tap targets are 44-50px**, meeting the iOS (44) and Android (48) minimums.
+- **Pinch-zoom is left enabled** — deliberately, since disabling it fails
+  WCAG 1.4.4 and the artwork rewards a closer look.
+- Layout is driven by `dvh` units and `clamp()`, and respects the safe-area
+  insets so notches and home indicators do not clip anything.
+- Motion is disabled under `prefers-reduced-motion`.
+
+### Links
+
+The four buttons are `<a class="link-btn">` in `index.html` — edit the `href`
+values there.
+
+| Button | Target |
 | --- | --- |
-| Page title & share preview | `<title>` and the `og:` meta tags |
-| Profile picture | `.avatar` — initials, or swap the `<div>` for `<img src="photo.jpg">` |
-| Name | `.name` |
-| Tagline | `.tagline` |
-| The links | `href` on each `<a class="link">` |
-| Footer | `<footer>` |
+| Instagram | profile |
+| YouTube | channel |
+| Facebook | profile |
+| WhatsApp | `https://wa.me/<countrycode><number>` — no `+` or spaces |
 
-### Link formats
+### Assets
 
-| Type | Format |
+| File | What it is |
 | --- | --- |
-| WhatsApp | `https://wa.me/918974151996` — country code + number, no `+` or spaces |
-| Email | `mailto:someone@example.com` |
-| Phone | `tel:+918974151996` |
-| Everything else | the normal profile URL |
+| `assets/background.webp` / `.jpg` | the torn-paper artwork, full-bleed |
+| `assets/avatar.jpg` | 320x320, cropped square on the face |
 
-### Adding a new link
+Fonts (Cormorant Garamond, Plus Jakarta Sans, La Belle Aurore) load from Google
+Fonts. Self-hosting them would remove the only external requests the page makes.
 
-Copy any existing `<a class="link">` block and change three things: the
-`--brand` colour, the `<path d="...">` inside `.icon`, and the `.label` text.
-Icon paths can be copied from [simple-icons](https://simpleicons.org).
+## The QR code
 
-## Deploying
+**https://sapta1997.github.io/VisitingQR/qr.html**
 
-GitHub Pages must be switched on once, by the repository owner:
+Enter the address, download the code as **SVG** for print or PNG for screen.
+It builds in the things that make printed codes fail:
 
-**Settings → Pages → Source: `Deploy from a branch` → Branch: `main` / `/ (root)` → Save**
+- the **quiet zone** (4 modules of margin) — it looks like empty padding and
+  gets cropped, but scanners need it
+- a **minimum print width**, calculated from a 0.5 mm floor per module
+- a **contrast check**, warning below 4:1 and on inverted (light-on-dark) codes
+- **whole-pixel modules** in the PNG, so edges stay crisp
 
-After that, every push to `main` republishes the site automatically, usually
-within a minute.
+Print the SVG. Then scan the actual printed sample with two different phones
+before ordering a batch — that URL is what gets committed to paper.
 
-## Design notes
+## Notes
 
-The page is a single poster image with four link buttons positioned on top of
-it. The artwork is a torn-paper photograph reveal, designed in
-`design-new/` and exported to `assets/`.
-
-- **Buttons are placed in percentages** of the poster (`left: 30.566%`,
-  `width: 39.0625%`, `--top` per button), so they stay locked to the artwork at
-  every screen size. Their pill shape comes from `border-radius: 999px` clipping
-  a rectangular image - the artwork corners are opaque and get cut away.
-- **The poster always fits the screen whole**: `min(100vw, 100svh * 0.6667)`
-  against a `1024/1536` aspect ratio, so nothing is ever cropped.
-- **106 KB total**, down from 3.3 MB of source PNGs - a 97% cut, with the
-  poster measured at 41 dB PSNR against the original (visually identical).
-  WebP is served first with a JPEG fallback via `<picture>`.
-- **Zero external requests.** No fonts, scripts, trackers or CDNs; the artwork
-  carries the typography. The whole card is `index.html` plus `assets/`.
-- **Accessible** - the poster's baked-in text is repeated in a screen-reader
-  heading and the image `alt`, every button has an `aria-label`, focus rings are
-  visible, and all motion is disabled under `prefers-reduced-motion`.
-
-## Editing the artwork
-
-`design-new/` holds the design canvas (`.dc.html`) and the full-resolution PNG
-exports. After changing the artwork there, re-export and re-optimise into
-`assets/`. Button geometry must stay at an 800x150 ratio (16:3) to match the
-`400x75` slot it is drawn into.
+`design-new/` holds the canvas and artwork for an **earlier** version of the
+card. Nothing in the live page uses it; it is kept only as history.
