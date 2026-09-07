@@ -17,22 +17,39 @@ shorter URLs make a lower-density, easier-to-scan code.
 
 ## The card
 
-`index.html` is a fixed, non-scrolling single screen: a torn-paper photograph
-fills the viewport, and all the type sits on top as real HTML text.
+`index.html` is a single poster image with four link buttons positioned on top
+of it. The artwork carries the typography; the buttons are separate images.
 
-- **The typography is text, not pixels.** Nothing is baked into the artwork, so
-  it stays sharp at any density, can be selected and translated, and is read
-  properly by screen readers.
-- **`background.webp` is 1425x2532** — the size a 390px-wide phone needs at 3x
-  pixel density under `object-fit: cover`. WebP is served first, with a JPEG
-  fallback via `<picture>`. The WebP is 121 KB, smaller than the 576x1024 JPEG
-  it replaced.
-- **Tap targets are 44-50px**, meeting the iOS (44) and Android (48) minimums.
-- **Pinch-zoom is left enabled** — deliberately, since disabling it fails
-  WCAG 1.4.4 and the artwork rewards a closer look.
-- Layout is driven by `dvh` units and `clamp()`, and respects the safe-area
-  insets so notches and home indicators do not clip anything.
+- **Buttons are placed in percentages** of the poster (`left: 30.566%`,
+  `width: 39.0625%`, `top` per button), so they stay locked to the artwork at
+  every screen size. Their pill shape comes from `border-radius: 999px`
+  clipping a rectangular image whose corners are opaque.
+- **The poster always fits the screen whole** - `min(100vw, 100svh * 0.6667)`
+  against a `1024/1536` ratio - so nothing is ever cropped.
+- **102 KB of artwork**, down from 2.4 MB of source PNGs. WebP is served first
+  with a JPEG fallback: `<picture>` for the buttons, `image-set()` for the
+  poster, which is a CSS background.
+- The poster's text is repeated in a visually hidden `<h1>` and every button
+  has an `aria-label`, since text inside an image is invisible to screen
+  readers and search engines.
 - Motion is disabled under `prefers-reduced-motion`.
+
+### Known trade-off: tap targets
+
+Because the whole poster scales as one fixed composition, the buttons shrink
+with it. Measured:
+
+| Viewport | Button | Centre-to-centre |
+| --- | --- | --- |
+| 360x780 | 141 x 26 px | 29.9 px |
+| 390x844 | 152 x 29 px | 32.4 px |
+| 430x932 | 168 x 31 px | 35.7 px |
+
+That is below the 44 px (iOS) and 48 px (Android) minimums, and it cannot be
+fixed by padding the hit area: at ~32 px between button centres, 44 px targets
+would overlap and taps near a boundary would open the wrong link. Raising it
+would mean letting the poster crop at the sides, or laying the buttons out in
+flow beneath the artwork instead of on top of it.
 
 ### Links
 

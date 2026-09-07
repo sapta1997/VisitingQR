@@ -1,567 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#eae2db" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="format-detection" content="telephone=no" />
-  <meta name="description" content="Saptadeep Sharma — photographer, filmmaker, spiritual scientist entrepreneur. Stories beyond frames." />
-  <title>Saptadeep Sharma — Stories Beyond Frames</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Saptadeep Sarma — Links</title>
+<meta name="description" content="Saptadeep Sarma — Photographer, Filmmaker, Spiritual Scientist, Entrepreneur. Stories beyond frames.">
+<meta name="theme-color" content="#e8e4df">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=La+Belle+Aurore&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<!-- Preview card shown when the link is shared on WhatsApp / Messenger / etc. -->
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Saptadeep Sarma">
+<meta property="og:description" content="Photographer / Filmmaker / Spiritual Scientist / Entrepreneur">
+<meta property="og:image" content="assets/poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
 
-  <style>
-    /* =========================================================
-       CSS Reset & Strict Non-Scrollable Mobile Viewport Setup
-       ========================================================= */
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
+<!-- The poster is the whole page, so fetch it as early as possible -->
+<link rel="preload" as="image" href="assets/poster.webp" type="image/webp">
+<style>
+  html, body { margin: 0; padding: 0; background: #e8e4df; }
+  body { -webkit-font-smoothing: antialiased; }
+  a { color: #2b2724; text-decoration: none; }
+  a:hover { color: #000000; }
 
-    :root {
-      --paper-top: #ede6de;
-      --paper-mid: #eae2db;
-      --paper-bottom: #e7ded7;
+  @keyframes riseIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .poster, .link-btn { animation: none !important; }
+  }
 
-      --ink: #241f1a;          /* near-black warm charcoal */
-      --ink-soft: #4a4239;     /* letter-spaced labels */
-      --ink-mute: #7a7064;     /* sub-labels / footer grey */
-      --cream: #f2e9db;        /* light script over the photo */
-      --pill-bg: rgba(250, 246, 239, 0.95);
+  .stage {
+    min-height: 100svh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(120% 90% at 50% 40%, #efece7 0%, #e5e0da 70%, #d9d3cc 100%);
+    padding: 0;
+    overflow: hidden;
+  }
 
-      --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-      --sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      --hand: 'La Belle Aurore', 'Segoe Script', cursive;
+  .poster {
+    position: relative;
+    width: min(100vw, calc(100svh * 0.6667));
+    aspect-ratio: 1024 / 1536;
+    background-image: url('assets/poster.jpg');   /* fallback for no image-set() */
+    background-image: -webkit-image-set(url('assets/poster.webp') type('image/webp'),
+                                        url('assets/poster.jpg')  type('image/jpeg'));
+    background-image: image-set(url('assets/poster.webp') type('image/webp'),
+                                url('assets/poster.jpg')  type('image/jpeg'));
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    box-shadow: 0 40px 90px -30px rgba(60, 48, 38, 0.45);
+    animation: fadeIn 700ms ease both;
+  }
 
-      --sat: env(safe-area-inset-top, 0px);
-      --sab: env(safe-area-inset-bottom, 0px);
-      --sal: env(safe-area-inset-left, 0px);
-      --sar: env(safe-area-inset-right, 0px);
-    }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    margin: 0;
+  }
 
-    html, body {
-      width: 100%;
-      height: 100%;
-      height: 100vh;
-      height: 100dvh;
-      overflow: hidden;
-      position: fixed;
-      inset: 0;
-      background-color: var(--paper-mid);
-      overscroll-behavior: none;
-      -webkit-overscroll-behavior: none;
-      touch-action: none;
-      user-select: none;
-      -webkit-user-select: none;
-      font-family: var(--sans);
-      color: var(--ink);
-    }
+  .link-btn {
+    position: absolute;
+    left: 30.566%;
+    width: 39.0625%;
+    height: 4.883%;
+    display: block;
+    border-radius: 999px;
+    overflow: hidden;
+    transition: transform 260ms cubic-bezier(.2, .8, .2, 1), box-shadow 260ms ease, filter 260ms ease;
+    box-shadow: 0 6px 18px -8px rgba(40, 30, 22, 0.45);
+    will-change: transform;
+  }
+  .link-btn picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .link-btn img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+  }
+  .link-btn:focus-visible {
+    outline: 2px solid #2b2724;
+    outline-offset: 3px;
+  }
+  .link-btn:hover {
+    transform: translateY(-3px) scale(1.018);
+    box-shadow: 0 16px 34px -12px rgba(40, 30, 22, 0.55);
+    filter: brightness(1.03);
+  }
+  .link-btn:active {
+    transform: translateY(-1px) scale(0.997);
+    box-shadow: 0 6px 14px -8px rgba(40, 30, 22, 0.5);
+  }
 
-    /* Base Canvas with Natural Organic Paper Texture & Ambient Lighting */
-    .viewport-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      height: 100dvh;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(180deg, var(--paper-top) 0%, var(--paper-mid) 48%, var(--paper-bottom) 100%);
-    }
+  .link-btn--instagram { top: 45.052%; animation: riseIn 620ms cubic-bezier(.2, .8, .2, 1) 120ms both; }
+  .link-btn--youtube   { top: 50.586%; animation: riseIn 620ms cubic-bezier(.2, .8, .2, 1) 210ms both; }
+  .link-btn--whatsapp  { top: 56.120%; animation: riseIn 620ms cubic-bezier(.2, .8, .2, 1) 300ms both; }
+  .link-btn--facebook  { top: 61.654%; animation: riseIn 620ms cubic-bezier(.2, .8, .2, 1) 390ms both; }
 
-    /* Ambient Micro-Grain Noise Overlay (Matches Torn Paper Surface) */
-    .paper-texture-overlay {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 40;
-      opacity: 0.4;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.12'/%3E%3C/svg%3E");
-    }
-
-    /* Subtle Natural Vignette for Depth */
-    .paper-vignette {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 41;
-      background: radial-gradient(circle at 50% 45%, transparent 55%, rgba(60, 45, 30, 0.05) 100%);
-    }
-
-    /* =========================================================
-       Background Image Layer (Edge-to-Edge Responsive Integration)
-       ========================================================= */
-    .background-stage {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2;
-    }
-
-    .background-stage picture {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-
-    .bg-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center center;
-      display: block;
-      pointer-events: none;
-      will-change: transform;
-    }
-
-    /* =========================================================
-       Content Frame (Safe-Area Aware)
-       ========================================================= */
-    .safe-frame {
-      position: absolute;
-      inset: 0;
-      padding-top: var(--sat);
-      padding-bottom: var(--sab);
-      padding-left: var(--sal);
-      padding-right: var(--sar);
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      pointer-events: none;
-    }
-    .safe-frame a { pointer-events: auto; }
-
-    /* --- Masthead ------------------------------------------- */
-    .masthead {
-      margin-top: clamp(14px, 3.4vh, 34px);
-      text-align: center;
-    }
-    .masthead-title {
-      font-size: clamp(9.5px, 1.5vh, 12.5px);
-      font-weight: 500;
-      letter-spacing: 0.45em;
-      padding-left: 0.45em; /* re-center: trailing tracking space */
-      text-transform: uppercase;
-      color: var(--ink-soft);
-    }
-    .rule {
-      display: block;
-      width: 30px;
-      height: 1px;
-      background: var(--ink-soft);
-      opacity: 0.75;
-      margin: clamp(8px, 1.5vh, 14px) auto 0;
-    }
-    .rule-faint { opacity: 0.45; }
-
-    /* --- Identity ------------------------------------------- */
-    .identity {
-      margin-top: clamp(30px, 12.5vh, 110px);
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .avatar {
-      width: clamp(62px, 8.8vh, 82px);
-      height: clamp(62px, 8.8vh, 82px);
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid rgba(252, 250, 246, 0.95);
-      box-shadow: 0 10px 24px -8px rgba(40, 30, 20, 0.4);
-      display: block;
-    }
-    .name {
-      margin-top: clamp(10px, 1.8vh, 17px);
-      font-family: var(--serif);
-      font-weight: 600;
-      font-size: clamp(25px, 3.8vh, 34px);
-      line-height: 1.1;
-      color: var(--ink);
-    }
-    .roles {
-      margin-top: clamp(7px, 1.2vh, 12px);
-      font-size: clamp(8px, 1.15vh, 9.5px);
-      font-weight: 500;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      line-height: 1.9;
-      color: var(--ink-soft);
-    }
-    .quote {
-      margin-top: clamp(8px, 1.1vh, 12px);
-      font-family: var(--serif);
-      font-weight: 500;
-      font-size: clamp(13px, 1.85vh, 16px);
-      line-height: 1.5;
-      color: #2e2921;
-    }
-
-    /* --- Link Buttons ---------------------------------------- */
-    .links {
-      margin-top: clamp(10px, 1.5vh, 14px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: clamp(8px, 1.1vh, 10px);
-      width: 100%;
-    }
-    .link-btn {
-      width: min(56vw, 230px);
-      height: clamp(44px, 5.5vh, 50px);
-      display: flex;
-      align-items: center;
-      gap: clamp(9px, 1.3vh, 12px);
-      padding: 0 clamp(14px, 2vh, 18px) 0 clamp(16px, 2.2vh, 20px);
-      background: var(--pill-bg);
-      border: 1px solid rgba(255, 255, 255, 0.75);
-      border-radius: 999px;
-      box-shadow: 0 12px 26px -12px rgba(40, 30, 20, 0.45), 0 2px 6px rgba(40, 30, 20, 0.06);
-      text-decoration: none;
-      color: var(--ink);
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-    }
-    .link-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 16px 30px -12px rgba(40, 30, 20, 0.5), 0 2px 6px rgba(40, 30, 20, 0.08);
-    }
-    .link-btn:active { transform: scale(0.97); }
-
-    .link-icon {
-      width: clamp(21px, 2.9vh, 25px);
-      height: clamp(21px, 2.9vh, 25px);
-      flex: none;
-      display: block;
-    }
-    .link-copy {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      min-width: 0;
-    }
-    .link-title {
-      font-family: var(--serif);
-      font-weight: 600;
-      font-size: clamp(16px, 2.2vh, 19px);
-      line-height: 1.05;
-      color: var(--ink);
-    }
-    .link-sub {
-      margin-top: clamp(2px, 0.45vh, 4px);
-      font-size: clamp(7.5px, 1vh, 8.5px);
-      font-weight: 500;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--ink-mute);
-      white-space: nowrap;
-    }
-    .link-arrow {
-      width: clamp(16px, 2.2vh, 19px);
-      height: clamp(16px, 2.2vh, 19px);
-      margin-left: auto;
-      flex: none;
-    }
-
-    /* =========================================================
-       Decorative Handwritten Scripts (Viewport Anchored)
-       ========================================================= */
-    .hand {
-      position: absolute;
-      z-index: 12;
-      font-family: var(--hand);
-      line-height: 1.45;
-      pointer-events: none;
-      white-space: nowrap;
-    }
-    .hand-rule {
-      display: block;
-      width: 3.4em;
-      height: 1px;
-      background: currentColor;
-      opacity: 0.7;
-      transform: rotate(-3deg);
-      margin-top: 0.35em;
-    }
-    .hand-left {
-      left: 4%;
-      top: 19%;
-      font-size: clamp(17px, 2.6vh, 24px);
-      color: #4a4239;
-      transform: rotate(-2deg);
-    }
-    .hand-right {
-      right: 4%;
-      top: 5.5%;
-      text-align: left;
-      font-size: clamp(17px, 2.6vh, 24px);
-      color: #4a4239;
-      transform: rotate(-1deg);
-    }
-    .hand-note {
-      right: 2.2%;
-      top: 52.5%;
-      font-size: clamp(11px, 1.5vh, 13px);
-      color: #857a6d;
-      text-shadow: 0 1px 8px rgba(240, 232, 220, 0.55);
-      transform: rotate(-2deg);
-    }
-    .hand-good {
-      left: 47%;
-      top: 73.5%;
-      font-size: clamp(14px, 2.2vh, 19px);
-      color: var(--cream);
-      text-shadow: 0 1px 10px rgba(30, 22, 14, 0.45);
-      transform: rotate(-2deg);
-    }
-    .hand-good .hand-rule { opacity: 0.8; }
-
-    /* =========================================================
-       Footer (Bottom Paper Band)
-       ========================================================= */
-    .foot {
-      position: absolute;
-      inset: 0;
-      z-index: 12;
-      pointer-events: none;
-      padding-bottom: var(--sab);
-    }
-    .foot-side {
-      position: absolute;
-      bottom: 10.6vh;
-      font-size: clamp(7.5px, 1.15vh, 10px);
-      font-weight: 500;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      line-height: 1.85;
-      color: var(--ink-mute);
-    }
-    .foot-left { left: 6.5%; }
-    .foot-right { right: 6.5%; text-align: left; bottom: 11vh; }
-    .foot-left .rule {
-      width: 22px;
-      margin: 8px 0 0;
-    }
-    .foot-center {
-      position: absolute;
-      bottom: clamp(10px, 3.4vh, 32px);
-      left: 0;
-      right: 0;
-      text-align: center;
-    }
-    .tagline {
-      font-size: clamp(9px, 1.4vh, 11.5px);
-      font-weight: 500;
-      letter-spacing: 0.26em;
-      padding-left: 0.26em;
-      text-transform: uppercase;
-      color: var(--ink-soft);
-      white-space: nowrap;
-    }
-    .logo {
-      width: clamp(30px, 4.6vh, 42px);
-      height: auto;
-      margin-top: clamp(7px, 1.3vh, 13px);
-      display: inline-block;
-    }
-
-    /* =========================================================
-       Entrance Animation
-       ========================================================= */
-    @keyframes rise {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .reveal {
-      opacity: 0;
-      animation: rise 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
-    }
-    .masthead  { animation-delay: 0.1s; }
-    .identity  { animation-delay: 0.25s; }
-    .links     { animation-delay: 0.45s; }
-    .hand      { animation-delay: 0.65s; }
-    .foot      { animation-delay: 0.75s; }
-    .foot .reveal { animation-delay: inherit; }
-
-    @media (prefers-reduced-motion: reduce) {
-      .reveal { animation: none; opacity: 1; }
-      .link-btn, .link-btn:hover, .link-btn:active { transition: none; transform: none; }
-    }
-
-    /* Desktop Viewport Helper: on wide screens, keep the sleek mobile framing */
-    @media (min-width: 820px) {
-      body {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #ded7ce;
-      }
-      .viewport-canvas {
-        width: 100%;
-        max-width: 480px;
-        height: 100%;
-        height: 100dvh;
-        border-radius: 28px;
-        box-shadow: 0 25px 60px -12px rgba(35, 25, 18, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.6);
-        position: relative;
-      }
-    }
-  </style>
+</style>
 </head>
-
 <body>
+  <div class="stage">
+    <div class="poster">
+      <h1 class="visually-hidden">Saptadeep Sarma — Photographer / Filmmaker / Spiritual Scientist / Entrepreneur</h1>
 
-  <!-- Main Viewport Canvas (Strict Non-Scrollable) -->
-  <main class="viewport-canvas">
+      <a class="link-btn link-btn--instagram" href="https://www.instagram.com/self_made_billionare_monk?igsi=MWE0NnRrc3h6eHl5eQ%3D%3D" target="_blank" rel="noopener" aria-label="Instagram — photos &amp; moments">
+        <picture>
+          <source srcset="assets/btn-1.webp" type="image/webp">
+          <img src="assets/btn-1.jpg" alt="Instagram" decoding="async">
+        </picture>
+      </a>
 
-    <!-- Background Artwork Stage -->
-    <div class="background-stage">
-      <picture>
-        <source srcset="assets/background.webp" type="image/webp" />
-        <img
-          src="assets/background.jpg"
-          alt="Torn paper opening onto a mountain sunset"
-          class="bg-image"
-          loading="eager"
-          decoding="sync"
-        />
-      </picture>
+      <a class="link-btn link-btn--youtube" href="https://youtube.com/@saptadeepsarma8943" target="_blank" rel="noopener" aria-label="YouTube — films &amp; stories">
+        <picture>
+          <source srcset="assets/btn-2.webp" type="image/webp">
+          <img src="assets/btn-2.jpg" alt="YouTube" decoding="async">
+        </picture>
+      </a>
+
+      <a class="link-btn link-btn--whatsapp" href="https://wa.me/918974151996" target="_blank" rel="noopener" aria-label="WhatsApp — message directly">
+        <picture>
+          <source srcset="assets/btn-3.webp" type="image/webp">
+          <img src="assets/btn-3.jpg" alt="WhatsApp" decoding="async">
+        </picture>
+      </a>
+
+      <a class="link-btn link-btn--facebook" href="https://www.facebook.com/share/1W4mgRKcbk/" target="_blank" rel="noopener" aria-label="Facebook — follow along">
+        <picture>
+          <source srcset="assets/btn-4.webp" type="image/webp">
+          <img src="assets/btn-4.jpg" alt="Facebook" decoding="async">
+        </picture>
+      </a>
     </div>
-
-    <!-- Safe Area Inset Frame & Content -->
-    <div class="safe-frame">
-
-      <header class="masthead reveal">
-        <p class="masthead-title">Stories Beyond Frames</p>
-        <span class="rule"></span>
-      </header>
-
-      <section class="identity reveal">
-        <!-- Placeholder portrait — swap assets/avatar.jpg when the final image is ready -->
-        <img class="avatar" src="assets/avatar.jpg" alt="Portrait of Saptadeep Sharma (placeholder)" />
-        <h1 class="name">Saptadeep Sharma</h1>
-        <p class="roles">Photographer&ensp;/&ensp;Filmmaker&ensp;/&ensp;Spiritual Scientist<br />Entrepreneur</p>
-        <p class="quote">Turning creativity into impact,<br />consciousness into perspective,<br />and human stories into lasting experiences.</p>
-      </section>
-
-      <!-- TODO: replace the href values below with your real profile URLs -->
-      <nav class="links reveal" aria-label="Links">
-        <a class="link-btn" href="https://www.instagram.com/self_made_billionare_monk?igsi=MWE0NnRrc3h6eHl5eQ==" target="_blank" rel="noopener">
-          <svg class="link-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <defs>
-              <linearGradient id="igGrad" x1="0" y1="1" x2="1" y2="0">
-                <stop offset="0" stop-color="#FEDA75"/>
-                <stop offset="0.3" stop-color="#F58529"/>
-                <stop offset="0.55" stop-color="#DD2A7B"/>
-                <stop offset="0.8" stop-color="#8134AF"/>
-                <stop offset="1" stop-color="#515BD4"/>
-              </linearGradient>
-            </defs>
-            <rect x="2.4" y="2.4" width="19.2" height="19.2" rx="5.6" fill="url(#igGrad)"/>
-            <circle cx="12" cy="12" r="4.1" fill="none" stroke="#fff" stroke-width="1.6"/>
-            <circle cx="17" cy="7" r="1.15" fill="#fff"/>
-          </svg>
-          <span class="link-copy">
-            <span class="link-title">Instagram</span>
-            <span class="link-sub">Photos &amp; Moments</span>
-          </span>
-          <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="#2b2520" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M4 12h15M13.5 6.5 19 12l-5.5 5.5"/>
-          </svg>
-        </a>
-
-        <a class="link-btn" href="https://youtube.com/@saptadeepsarma8943" target="_blank" rel="noopener">
-          <svg class="link-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="1.8" y="4.8" width="20.4" height="14.4" rx="4.2" fill="#FF0000"/>
-            <path d="M10 9.1v5.8l5.2-2.9z" fill="#fff"/>
-          </svg>
-          <span class="link-copy">
-            <span class="link-title">YouTube</span>
-            <span class="link-sub">Films &amp; Stories</span>
-          </span>
-          <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="#2b2520" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M4 12h15M13.5 6.5 19 12l-5.5 5.5"/>
-          </svg>
-        </a>
-
-        <a class="link-btn" href="https://www.facebook.com/share/1W4mgRKcbk/" target="_blank" rel="noopener">
-          <svg class="link-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="1.8" y="1.8" width="20.4" height="20.4" rx="5.6" fill="#1877F2"/>
-            <path d="M15.12 5.32H17V2.14A26.11 26.11 0 0 0 14.26 2C11.54 2 9.68 3.66 9.68 6.7v2.62H6.61v3.56h3.07V22h3.68v-9.12h3.06l.46-3.56h-3.52V7.05c0-1.03.28-1.73 1.76-1.73z" fill="#fff"/>
-          </svg>
-          <span class="link-copy">
-            <span class="link-title">Facebook</span>
-            <span class="link-sub">Community &amp; Updates</span>
-          </span>
-          <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="#2b2520" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M4 12h15M13.5 6.5 19 12l-5.5 5.5"/>
-          </svg>
-        </a>
-
-        <a class="link-btn" href="https://wa.me/918974151996" target="_blank" rel="noopener">
-          <svg class="link-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="1.8" y="1.8" width="20.4" height="20.4" rx="5.6" fill="#25D366"/>
-            <g transform="translate(4.56 4.56) scale(0.62)">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" fill="#fff"/>
-            </g>
-          </svg>
-          <span class="link-copy">
-            <span class="link-title">WhatsApp</span>
-            <span class="link-sub">Chat &amp; Enquiries</span>
-          </span>
-          <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="#2b2520" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M4 12h15M13.5 6.5 19 12l-5.5 5.5"/>
-          </svg>
-        </a>
-      </nav>
-
-    </div>
-
-    <!-- Decorative Handwritten Marginalia -->
-    <div class="hand hand-left reveal" aria-hidden="true">Capture<br />Create<br />Explore<br />Belong<span class="hand-rule"></span></div>
-    <div class="hand hand-right reveal" aria-hidden="true">Photos<br />Films<br />People<br />Purpose<span class="hand-rule"></span></div>
-    <div class="hand hand-note reveal" aria-hidden="true">still here<br />still learning</div>
-    <div class="hand hand-good reveal" aria-hidden="true">Good<br />Stories<br />Travel Far<span class="hand-rule"></span></div>
-
-    <!-- Footer Paper Band -->
-    <footer class="foot reveal" aria-hidden="false">
-      <div class="foot-side foot-left">People<br />Places<br />Perspectives<span class="rule"></span></div>
-      <div class="foot-side foot-right">A&nbsp;More<br />Conscious<br />Creative<br />World</div>
-      <div class="foot-center">
-        <p class="tagline">Let&rsquo;s Create Something Meaningful</p>
-        <svg class="logo" viewBox="0 0 52 30" aria-hidden="true">
-          <path d="M3 27 L17.5 5 L27 21 L32.5 12.5 L49 27 Z" fill="#2b2520"/>
-          <path d="M14.6 9.4 17.5 5 20.2 9.6 17.4 8.1 Z" fill="#f0e9df"/>
-          <path d="M30.4 16 32.5 12.5 35 16.6 32.2 15.3 Z" fill="#f0e9df"/>
-        </svg>
-      </div>
-    </footer>
-
-    <!-- Ambient Texture & Lighting (above everything for a unified print feel) -->
-    <div class="paper-texture-overlay" aria-hidden="true"></div>
-    <div class="paper-vignette" aria-hidden="true"></div>
-
-  </main>
-
-  <script>
-    // Strict non-scrollable behavior: prevent rubber-band bounce & pull-to-refresh
-    document.addEventListener('touchmove', function (e) {
-      e.preventDefault();
-    }, { passive: false });
-  </script>
-
+  </div>
 </body>
 </html>
